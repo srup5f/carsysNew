@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--配置资源文件-->
+    <properties resource="map/jdbc.properties"/>
+    <!--配置类型别名-->
+    <typeAliases>
+        <package name="org.example.bean.Car"/>
+    </typeAliases>
+    <environments default="mysql">
+        <!--配置mysql数据源-->
+        <environment id="mysql">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${mysql.driver}"/>
+                <property name="url" value="${mysql.url}"/>
+                <property name="username" value="${mysql.username}"/>
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+        <!--配置postgresql数据源-->
+        <environment id="postgresql">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${postgresql.driver}"/>
+                <property name="url" value="${postgresql.url}"/>
+                <property name="username" value="${postgresql.username}"/>
+                <property name="password" value="${postgresql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--映射mapper-->
+    <mappers>
+        <mapper resource="map/ICarDao.xml"/>
+        <mapper resource="map/ICarAccessoriesDao.xml"/>
+    </mappers>
+</configuration>

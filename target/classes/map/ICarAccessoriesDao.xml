@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.dao.ICarAccessoriesDao">
+    <!--配置resultMap对应java类-->
+    <resultMap id="car_accessories" type="org.example.bean.CarAccessories">
+        <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="brand" property="brand" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="accessories_name" property="accessoriesName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="availability" property="availability" jdbcType="BIT" javaType="java.lang.Boolean"/>
+        <result column="price" property="price" jdbcType="REAL" javaType="java.lang.Float"/>
+    </resultMap>
+    <!--插入数据-->
+    <insert id="insert" parameterType="java.util.List">
+        insert into car_accessories (id,brand, accessories_name, availability, price)
+        values
+        <!--遍历list-->
+        <foreach collection="list" item="ca" separator=",">
+            (
+            #{ca.id},
+            #{ca.brand},
+            #{ca.accessoriesName},
+            #{ca.availability},
+            #{ca.price}
+            )
+        </foreach>
+    </insert>
+    <!--删除数据-->
+    <delete id="delete">
+        delete from car_accessories
+        where 1=1
+        <!--拼接查询字段-->
+        <if test="ca!=null">
+            <!--查询字段id-->
+            <if test="ca.id!=null"> and id=#{ca.id}</if>
+            <!--查询字段brand-->
+            <if test="ca.brand!=null and ca.brand!=''"> and brand=#{ca.brand}</if>
+            <!--查询字段accessories_name-->
+            <if test="ca.accessoriesName!=null and ca.accessoriesName!=''"> and accessories_name=#{ca.accessoriesName}</if>
+            <!--查询字段availability-->
+            <if test="ca.availability!=null"> and availability=#{ca.availability}</if>
+            <!--查询字段price-->
+            <if test="ca.price!=null"> and price &lt;=#{ca.price}</if>
+        </if>
+    </delete>
+    <update id="update">
+        <if test="u!=null and ((u.brand!=null and u.brand!='') or (u.accessoriesName!=null and u.accessoriesName!='')
+                    or u.availability!=null or u.price!=null)">
+            update car_accessories set
+            <!--拼接更新字段，更新字段brand-->
+            <if test="u.brand!=null and u.brand!=''">brand=#{u.brand}</if>
+            <!--更新字段accessories_name-->
+            <if test="u.accessoriesName!=null and u.accessoriesName!=''">
+                <if test="u.brand!=null and u.brand!=''">,</if>
+                accessories_name=#{u.accessoriesName}</if>
+            <!--更新字段availability-->
+            <if test="u.availability!=null">
+                <if test="(u.brand!=null and u.brand!='') or (u.accessoriesName!=null and u.accessoriesName!='')">,</if>
+                availability=#{u.availability}</if>
+            <!--更新字段price-->
+            <if test="u.price!=null">
+                <if test="(u.brand!=null and u.brand!='') or (u.accessoriesName!=null and u.accessoriesName!='') or u.availability!=null">,</if>
+                price=#{u.price}</if>
+            where 1=1
+            <!--拼接查询字段-->
+            <if test="q!=null">
+                <!--查询字段id-->
+                <if test="q.id!=null"> and id=#{q.id}</if>
+                <!--查询字段brand-->
+                <if test="q.brand!=null and q.brand!=''"> and brand=#{q.brand}</if>
+                <!--查询字段accessories_name-->
+                <if test="q.accessoriesName!=null and q.accessoriesName!=''"> and accessories_name=#{q.accessoriesName}</if>
+                <!--查询字段availability-->
+                <if test="q.availability!=null"> and availability=#{q.availability}</if>
+                <!--查询字段price-->
+                <if test="q.price!=null"> and price &lt;=#{q.price}</if>
+            </if>
+        </if>
+    </update>
+    <select id="query" resultMap="car_accessories">
+        select * from car_accessories
+        where 1=1
+        <if test="ca!=null">
+            <!--查询字段id-->
+            <if test="ca.id!=null"> and id=#{ca.id}</if>
+            <!--查询字段brand-->
+            <if test="ca.brand!=null and ca.brand!=''"> and brand=#{ca.brand}</if>
+            <!--查询字段accessories_name-->
+            <if test="ca.accessoriesName!=null and ca.accessoriesName!=''"> and accessories_name=#{ca.accessoriesName}</if>
+            <!--查询字段availability-->
+            <if test="ca.availability!=null"> and availability=#{ca.availability}</if>
+            <!--查询字段price-->
+            <if test="ca.price!=null"> and price &lt;=#{ca.price}</if>
+
+        </if>
+    </select>
+</mapper>

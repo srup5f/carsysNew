@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.dao.ICarDao">
+    <!--配置resultMap对应java类-->
+    <resultMap id="rm" type="org.example.bean.Car">
+        <id column="id" javaType="java.lang.Integer" jdbcType="INTEGER" property="id"/>
+        <result column="brand" javaType="java.lang.String" jdbcType="VARCHAR" property="brand"/>
+        <result column="type" javaType="java.lang.String" jdbcType="VARCHAR" property="type"/>
+        <result column="price" javaType="java.lang.Float" jdbcType="REAL" property="price"/>
+    </resultMap>
+    <!--插入数据-->
+    <insert id="insert" parameterType="java.util.List">
+        insert into car (id,brand,type,price)
+        values
+        <!--遍历list-->
+        <foreach collection="list" item="c" separator=",">
+            (
+            #{c.id},
+            #{c.brand},
+            #{c.type},
+            #{c.price}
+            )
+        </foreach>
+    </insert>
+    <!--删除数据-->
+    <delete id="delete">
+        delete from car
+        where 1=1
+        <!--拼接查询字段-->
+        <if test="c!=null">
+            <!--查询字段id-->
+            <if test="c.id!=null"> and id=#{c.id}</if>
+            <!--查询字段brand-->
+            <if test="c.brand!=null and c.brand!=''">and brand=#{c.brand}</if>
+            <!--查询字段type-->
+            <if test="c.type!=null and c.type!=''">and type=#{c.type}</if>
+            <!--查询字段price-->
+            <if test="c.price!=null"> and price &lt;=#{c.price}</if>
+            <!--无查询字段-->
+            <if test="c.id==null and (c.brand==null or c.brand=='') and (c.type==null or c.type=='') and c.price==null">
+                and 1!=1
+            </if>
+        </if>
+    </delete>
+    <update id="update">
+        <if test="u!=null and ((u.brand!=null and u.brand!='') or (u.type!=null and u.type!='') or u.price!=null)">
+            update car set
+            <!--拼接更新字段，更新字段brand-->
+            <if test="u.brand!=null"> brand=#{u.brand},</if>
+            <!--更新字段type-->
+            <if test="u.type!=null"> type=#{u.type},</if>
+            <!--更新字段price-->
+            <if test="u.price!=null"> price=#{u.price}</if>
+            where 1=1
+            <!--拼接查询字段-->
+            <if test="q!=null">
+                <!--查询字段id-->
+                <if test="q.id!=null"> and id=#{q.id}</if>
+                <!--查询字段brand-->
+                <if test="q.brand!=null and q.brand!=''">and brand=#{q.brand}</if>
+                <!--查询字段type-->
+                <if test="q.type!=null and q.type!=''">and type=#{q.type}</if>
+                <!--查询字段price-->
+                <if test="q.price!=null"> and price &lt;=#{q.price}</if>
+                <!--无查询字段-->
+                <if test="q.id==null and (q.brand==null or q.brand=='') and (q.type==null or q.type=='') and q.price==null">
+                    and 1!=1
+                </if>
+            </if>
+        </if>
+    </update>
+    <select id="query" resultMap="rm">
+        select * from car
+        where 1=1
+        <!--拼接查询字段-->
+        <if test="c!=null">
+            <!--查询字段id-->
+            <if test="c.id!=null"> and id=#{c.id}</if>
+            <!--查询字段brand-->
+            <if test="c.brand!=null and c.brand!=''">and brand=#{c.brand}</if>
+            <!--查询字段type-->
+            <if test="c.type!=null and c.type!=''">and type=#{c.type}</if>
+            <!--查询字段price-->
+            <if test="c.price!=null"> and price &lt;=#{c.price}</if>
+        </if>
+    </select>
+
+</mapper>
